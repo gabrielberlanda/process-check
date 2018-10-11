@@ -5,6 +5,7 @@ import * as url from 'url';
 let win, serve;
 const args = process.argv.slice(1);
 const exec = require('child_process').exec;
+const execFile = require('child_process').execFile;
 const psList = require('ps-list');
 
 serve = args.some(val => val === '--serve');
@@ -111,5 +112,16 @@ function getAllProcess () {
   });
 }
 
+function startProcess(processPath) {
+  processPath = "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe";
+  return new Promise((resolve, reject) => {
+    execFile(processPath, null, (err, data) => {
+      if(!err) resolve();
+      else reject(err);
+    })
+  })
+}
+
 (global as any).isRunning = isRunning;
 (global as any).allProcess = getAllProcess;
+(global as any).startProcess = startProcess;

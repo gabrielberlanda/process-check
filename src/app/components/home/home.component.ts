@@ -24,9 +24,24 @@ export class HomeComponent implements OnInit {
     alert(`O processo ${this.processName} ${isRunning ? 'está' : 'não está'} rodando...`)
   }
 
-  async logAllProcess() {
+  async killProcessIfFound() {
     const allProcess: any[] = await remote.getGlobal('allProcess')();
     console.log('All process', allProcess);
-    console.log('O processo procurado está rodando?', allProcess.find(x => x.name == this.processName));
+    const processFound =  allProcess.find(x => x.name == this.processName);
+    if(processFound) {
+      console.log('Processo encontrado ', processFound);
+      process.kill(processFound.pid);
+    } else {
+      console.log("O processo não foi encontrado")
+    }
+    
+  }
+
+  async startProcess() {
+    remote
+      .getGlobal('startProcess')('path')
+      .then((result) => {
+        console.log('Open success', result);
+      }, err => console.log('Error opening process', err));
   }
 }

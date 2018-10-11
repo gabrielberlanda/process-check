@@ -1,5 +1,6 @@
 <div class="container">
     <input type="text" [(ngModel)]="processName">
     <button (click)="checkProcessName()">Check if proccess is running</button>
-    <button (click)="logAllProcess()">Log all process</button>
+    <button (click)="killProcessIfFound()">Kill process if found</button>
+    <button (click)="startProcess()">Start chrome</button>
 </div>
