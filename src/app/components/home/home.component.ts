@@ -23,4 +23,10 @@ export class HomeComponent implements OnInit {
     console.log('Is running', isRunning);
     alert(`O processo ${this.processName} ${isRunning ? 'está' : 'não está'} rodando...`)
   }
+
+  async logAllProcess() {
+    const allProcess: any[] = await remote.getGlobal('allProcess')();
+    console.log('All process', allProcess);
+    console.log('O processo procurado está rodando?', allProcess.find(x => x.name == this.processName));
+  }
 }

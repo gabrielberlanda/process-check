@@ -5,6 +5,7 @@ import * as url from 'url';
 let win, serve;
 const args = process.argv.slice(1);
 const exec = require('child_process').exec;
+const psList = require('ps-list');
 
 serve = args.some(val => val === '--serve');
 
@@ -19,10 +20,15 @@ function isRunning(query) {
         case 'linux' : cmd = `ps -A`; break;
         default: break;
     }
-    exec(cmd, (err, stdout, stderr) => {
-      console.log(query + ' rodando? ' + (stdout.toLowerCase().indexOf(query.toLowerCase()) > -1));
-      resolve(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);  
-    });
+    try {
+      exec(cmd, (err, stdout, stderr) => {
+        console.log(query + ' rodando? ' + (stdout.toLowerCase().indexOf(query.toLowerCase()) > -1));
+        resolve(stdout.toLowerCase().indexOf(query.toLowerCase()) > -1);  
+      });
+    } catch(err) {
+      console.log('Ocorreu um erro ao verificar o processo', err);
+      reject(err);
+    }
   })
 }
 
@@ -94,4 +100,16 @@ try {
   // throw e;
 }
 
+function getAllProcess () {
+  return new Promise((resolve, reject) => {
+    try {
+      const allProcess = psList().then(process => resolve(process), err => reject(err));
+    } catch (err) {
+      console.log('Ops, got an error trying to load all process', err);
+      reject(err);
+    }
+  });
+}
+
 (global as any).isRunning = isRunning;
+(global as any).allProcess = getAllProcess;
